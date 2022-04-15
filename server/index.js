@@ -1,5 +1,17 @@
+const mongoose = require('mongoose');
+mongoose
+  .connect('mongodb://localhost/fetcher', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('connected'))
+  .catch((err) => console.error(err));
+
 const express = require('express');
+// const db = require('././database')
 let app = express();
+
+// const connection = db.mongoose.connection;
 
 app.use(express.static(__dirname + '/../client/dist'));
 
@@ -17,7 +29,6 @@ app.get('/repos', function (req, res) {
 
 let port = 1128;
 
-app.listen(port, function() {
+app.listen(port, function () {
   console.log(`listening on port ${port}`);
 });
-
