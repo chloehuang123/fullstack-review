@@ -8,8 +8,12 @@ mongoose
   .catch((err) => console.error(err));
 
 const express = require('express');
-// const db = require('././database')
+const db = require('../database/index');
+const bodyParser = require('body-parser');
+const { getReposByUsername } = require('../helpers/github.js');
 let app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // const connection = db.mongoose.connection;
 
@@ -19,7 +23,16 @@ app.post('/repos', function (req, res) {
   // TODO - your code here!
   // This route should take the github username provided
   // and get the repo information from the github API, then
-  // save the repo information in the database
+  // save the repo information in the database.
+
+  var name = req.body['username'];
+
+  getReposByUsername(name).then((data) => {
+    // console.log(data);
+    db.save(data);
+  });
+
+  // getReposByUsername(name);
 });
 
 app.get('/repos', function (req, res) {
