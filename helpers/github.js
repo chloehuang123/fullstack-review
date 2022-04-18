@@ -13,15 +13,10 @@ let getReposByUsername = async (username) => {
     headers: {
       'User-Agent': 'request',
       Authorization: `token ${config.TOKEN}`,
-    },
+    }
   };
-  try {
-    let res = await axios(options);
-    // console.log(options);
-    return res.data;
-  } catch (err) {
-    console.error(err.message);
-  }
+  return axios.get(options.url)
+
 };
 
 module.exports.getReposByUsername = getReposByUsername;

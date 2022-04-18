@@ -1,32 +1,40 @@
 const mongoose = require('mongoose');
 
-
 let repoSchema = mongoose.Schema({
   user_name: String,
   repo_id: { type: Number, required: true },
   repo_name: String,
   url: String,
-  forks: Number
+  forks: Number,
 });
 
 let Repo = mongoose.model('Repo', repoSchema);
 
 let save = async (repos) => {
   try {
-    for (let repo of repos) {
-      let data = {};
-      data.user_name = repo.owner.login;
-      data.repo_id = repo.id;
-      data.repo_name = repo.name;
-      data.url = repo.html_url;
-      data.forks = repo.forks_count;
-
-      let newRepo = await Repo.create(data);
+    for (let i = 0; i < repos.length; i++) {
+      let repo = new Repo({
+        user_name: repos[i].owner.login,
+        repo_id: repos[i].id,
+        repo_name: repos[i].name,
+        url: repos[i].owner.html_url,
+        forks: repos[i].forks_count,
+      });
+       await repo.save();
     }
-    console.log('new repo saved!');
+
   } catch (err) {
     console.error(err.message);
   }
-}
+};
+
+let read = async () => {
+  try {
+    return await Repo.find({}).sort({ forks: -1 }).limit(25);
+  } catch (err) {
+    console.log('Error read repo');
+  }
+};
 
 module.exports.save = save;
+module.exports.read = read;
