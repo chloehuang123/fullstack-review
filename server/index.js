@@ -36,7 +36,8 @@ app.post('/repos', function (req, res) {
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
-  db.read(req.body.username).then(
+  console.log('get request here')
+  db.read( ).then(
     (data) => res.send(data),
     (err) => console.log('Error get repos')
   );
