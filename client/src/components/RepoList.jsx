@@ -6,14 +6,7 @@ const RepoList = ({ repos }) => (
     <h4> Repo List Component </h4>
     There are {repos.length} repos.
     {repos.map((repo) => {
-      return (
-        <Repo
-          key={repo.repo_id}
-          url={repo.url}
-          name={repo.repo_name}
-          forks={repo.forks}
-        />
-      );
+      return <Repo key={repo._id} repo={repo} />;
     })}
   </div>
 );

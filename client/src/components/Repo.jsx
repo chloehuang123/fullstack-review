@@ -1,14 +1,17 @@
 import React from 'react';
 
-const Repo = ({url, name, forks}) => {
-  console.log('Name got here', name);
+const Repo = ({ repo }) => {
+  // console.log('Name got here', name);
+  console.log('repo is here',repo);
   return (
-    <div>
-      <h4>{name}</h4>
-      <p>{forks}</p>
-      <a href="{url}" alt="">link</a>
-    </div>
-  )
-}
+    <li>
+      {repo.repo_name}
+      {repo.forks}
+      <a href={repo.url} alt=''>
+        link
+      </a>
+    </li>
+  );
+};
 
 export default Repo;

@@ -13,9 +13,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    $.ajax('http://localhost:1128/repos').then(data => {
+    $.ajax('http://localhost:1128/repos').then((data) => {
       console.log('data here', data);
-      this.setState({repos: data})
+      this.setState({ repos: data });
     });
   }
 
@@ -27,14 +27,12 @@ class App extends React.Component {
       type: 'GET',
       url: 'http://localhost:1128/repos',
       dataType: 'json',
-      success: (data) => {
-        return data;
+      success: function (err, data) {
+        if (err) {
+          console.error(err.message);
+        }
+        console.log('data is', data);
       },
-    }).then((data) => {
-      this.setState({
-        repos: data,
-      });
-      console.log('data is', data);
     });
   }
 
