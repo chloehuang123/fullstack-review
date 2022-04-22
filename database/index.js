@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 
-let repoSchema = mongoose.Schema({
+mongoose
+  .connect('mongodb://127.0.0.1:27017/fetcher', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('mongoose connected'))
+  .catch((err) => console.error(err.message));
+
+let repoSchema = new mongoose.Schema({
   user_name: String,
   repo_id: { type: Number, required: true },
   repo_name: String,
@@ -10,22 +18,30 @@ let repoSchema = mongoose.Schema({
 
 let Repo = mongoose.model('Repo', repoSchema);
 
-let save = async (repos) => {
-  try {
-    for (let i = 0; i < repos.length; i++) {
-      let repo = new Repo({
-        user_name: repos[i].owner.login,
-        repo_id: repos[i].id,
-        repo_name: repos[i].name,
-        url: repos[i].owner.html_url,
-        forks: repos[i].forks_count,
-      });
-       await repo.save();
-    }
+let save = (userRepos) => {
+  // console.log('userRepos', userRepos);
+  let resolveMe = userRepos.map((userRepo) => {
+    let filter = { repo_id: userRepo.id };
+    let update = {
+      repo_name: userRepo.name,
+      user_name: userRepo.owner.login,
+      url: userRepo.owner.html_url,
+      forks: userRepo.forks_count,
+    };
+    let options = {
+      new: true,
+      upsert: true,
+      useFindAndModify: false,
+    };
 
-  } catch (err) {
-    console.error(err.message);
-  }
+    Repo.findOneAndUpdate(filter, update, options, (err) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log('Success saving repo');
+    });
+  });
+  return Promise.all(resolveMe);
 };
 
 let read = async () => {

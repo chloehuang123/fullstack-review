@@ -1,14 +1,8 @@
 const mongoose = require('mongoose');
-mongoose
-  .connect('mongodb://localhost/fetcher', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log('mongoose connected'))
-  .catch((err) => console.error(err.message));
 
 const express = require('express');
-const db = require('../database/index');
+const db = require('../database/index.js');
+console.log(db);
 const { getReposByUsername } = require('../helpers/github.js');
 let app = express();
 
@@ -23,21 +17,26 @@ app.post('/repos', function (req, res) {
   // This route should take the github username provided
   // and get the repo information from the github API, then
   // save the repo information in the database.
-  getReposByUsername(req.body.username)
+  console.log('app post 1', req.body.term);
+  return getReposByUsername(req.body.term)
     .then((data) => {
+      console.log('received data 3', data);
+      // for (let i = 0; i < data.length; i++) {
+      //   db.save(data[i]);
+      // }
+      // {data: [ ]}
       db.save(data);
     })
     .then((result) => {
+      console.log('result 5', result);
       res.send(result);
-      res.end();
     });
 });
 
 app.get('/repos', function (req, res) {
   // TODO - your code here!
   // This route should send back the top 25 repos
-  console.log('get request here')
-  db.read( ).then(
+  db.read().then(
     (data) => res.send(data),
     (err) => console.log('Error get repos')
   );

@@ -21,18 +21,12 @@ class App extends React.Component {
 
   search(term) {
     console.log(`${term} was searched`);
-    let data = {};
-    data.username = term;
     $.ajax({
-      type: 'GET',
+      method: 'POST',
       url: 'http://localhost:1128/repos',
-      dataType: 'json',
-      success: function (err, data) {
-        if (err) {
-          console.error(err.message);
-        }
-        console.log('data is', data);
-      },
+      data: { term },
+    }).done(function (msg) {
+      alert('Data Saved: ' + msg);
     });
   }
 
