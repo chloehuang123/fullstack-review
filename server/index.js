@@ -20,12 +20,12 @@ app.post('/repos', function (req, res) {
   console.log('app post 1', req.body.term);
   return getReposByUsername(req.body.term)
     .then((data) => {
-      console.log('received data 3', data);
+      console.log('received data 3', data.data);
       // for (let i = 0; i < data.length; i++) {
       //   db.save(data[i]);
       // }
       // {data: [ ]}
-      db.save(data);
+      db.save(data.data);
     })
     .then((result) => {
       console.log('result 5', result);

@@ -10,13 +10,15 @@ class App extends React.Component {
     this.state = {
       repos: [],
     };
+    this.autoRepos = this.autoRepos.bind(this);
   }
 
   componentDidMount() {
-    $.ajax('http://localhost:1128/repos').then((data) => {
-      console.log('data here', data);
-      this.setState({ repos: data });
-    });
+    // $.ajax('http://localhost:1128/repos').then((data) => {
+    //   console.log('data here', data);
+    //   this.setState({ repos: data });
+    // });
+    this.autoRepos();
   }
 
   search(term) {
@@ -25,8 +27,25 @@ class App extends React.Component {
       method: 'POST',
       url: 'http://localhost:1128/repos',
       data: { term },
-    }).done(function (msg) {
-      alert('Data Saved: ' + msg);
+      success: () => {
+        console.log('Search successfully');
+        this.autoRepos();
+      },
+    });
+  }
+
+  autoRepos() {
+    $.ajax({
+      url: 'http://localhost:1128/repos',
+      method: 'GET',
+      success: (data) => {
+        this.setState({
+          repos: data,
+        });
+      },
+      error: function (err) {
+        console.log('Error is here!');
+      },
     });
   }
 
